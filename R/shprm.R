@@ -988,8 +988,7 @@ GetHabitats <- function(grp.att, tmplt, prm, habitat.types) {
   Codes <- grp.att$Code
   habitats <- length(habitat.types)
   codes <- length(Codes)
-
-  txt.rows <- data.frame(Codes, matrix(NA, nrow = codes, ncol = habitats))
+ txt.rows <- data.frame(Codes, matrix(NA, nrow = codes, ncol = habitats + 1))
   names(txt.rows) <- c("Code", habitat.types)
   for (xxx in Codes) { # look for each Code
     txt.find <- gsub(pattern = "XXX", replacement = xxx, x = tmplt)
@@ -998,12 +997,6 @@ GetHabitats <- function(grp.att, tmplt, prm, habitat.types) {
       hab.vals <- na.omit(as.numeric(unlist(
         strsplit(prm[j+1], "[^0-9.]+"))))
       k <- which(txt.rows$Code == xxx)
-      print(dim(txt.rows))
-      print(length(c(xxx, hab.vals)))
-      print("-")
-      print(head(txt.rows))
-      print(c(xxx, hab.vals))
-stop()
       txt.rows[k,] <- c(xxx, hab.vals)
     }
   }  
