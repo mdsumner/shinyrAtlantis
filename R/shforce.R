@@ -65,7 +65,7 @@
 #' }
 #' @export
 #' @importFrom ggplot2 facet_wrap geom_point geom_segment geom_line annotate scale_fill_gradient2 scale_color_manual arrow element_text
-#' @importFrom dplyr left_join select
+#' @importFrom dplyr filter left_join select
 #' @importFrom grid unit
 sh.forcings <- function(input.object){
   # create HTML text for viewing on help tab  
@@ -649,7 +649,7 @@ sh.forcings <- function(input.object){
         
         df.plot <- dplyr::left_join(input.object$map.vertices, df, by = "boxid")
         df.unconnected <- df.plot %>% filter(links == 0)
-        
+    
         gg <- ggplot(data = df.plot, 
           aes(x = x, y = y, group = boxid, fill = links)) +
           geom_polygon(colour = "grey25", size = 0.25, na.rm = TRUE) + 
@@ -707,6 +707,7 @@ sh.forcings <- function(input.object){
         
         names(df)[3:(numlayers+2)] <- layer.names
         tmp <- numlayers+2
+        
         df <- tidyr::gather(df, layer, links, 3:tmp)
         df$layer <- sort(rep(0:(numlayers-1), numboxes))
         
@@ -1726,10 +1727,10 @@ make.map.object.frc <- function(bgm.file, cum.depth){
 make.exchanges.object.frc <- function(exchange.file) {
   nc.exchange.out <- nc_open(exchange.file) # open .nc file
   
-  t          <- ncvar_get(nc.exchange.out, "t")
-  exchange   <- ncvar_get(nc.exchange.out, "exchange") # keep raw values
-  dest.box   <- ncvar_get(nc.exchange.out, "dest_b")   # keep raw values
-  dest.layer <- ncvar_get(nc.exchange.out, "dest_k") # keep raw values
+  t          <- ncvar_get(nc.exchange.out, "t", collapse_degen = FALSE)
+  exchange   <- ncvar_get(nc.exchange.out, "exchange", collapse_degen = FALSE) # keep raw values
+  dest.box   <- ncvar_get(nc.exchange.out, "dest_b", collapse_degen = FALSE)   # keep raw values
+  dest.layer <- ncvar_get(nc.exchange.out, "dest_k", collapse_degen = FALSE) # keep raw values
   nc_close(nc.exchange.out)
   
   numboxes <- dim(exchange)[3] # number of boxes
@@ -1757,11 +1758,21 @@ make.exchanges.object.frc <- function(exchange.file) {
 # +=================================================================+
 make.salinity.object.frc <- function(salinity.file) {
   nc.salinity.out <- nc_open(salinity.file) # open .nc file
-  salinity   <- ncvar_get(nc.salinity.out, "salinity") # keep raw values
+  salinity   <- ncvar_get(nc.salinity.out, "salinity", collapse_degen = FALSE) # keep raw values
+  numboxes <- dim(salinity)[2] # number of boxes
+  
+  t          <- ncvar_get(nc.salinity.out, "t", collapse_degen = FALSE)
+  t <- t / (60*60*24) # convert seconds to days
+  numlayers <- dim(salinity)[1] # number of depth layers 
+  numtimes <- dim(salinity)[3] # number of time points
   
   nc_close(nc.salinity.out)
   
-  return(salinity)
+  return(list(t = t, 
+              numlayers  = numlayers,
+              numboxes   = numboxes,
+              numtimes   = numtimes,
+              temperature = salinity))
 }  
 
 # +======================================================================+
@@ -1769,11 +1780,22 @@ make.salinity.object.frc <- function(salinity.file) {
 # +======================================================================+
 make.temperature.object.frc <- function(temperature.file) {
   nc.temperature.out <- nc_open(temperature.file) # open .nc file
-  temperature <- ncvar_get(nc.temperature.out, "temperature") # keep raw values
+
+  temperature <- ncvar_get(nc.temperature.out, "temperature", collapse_degen = FALSE) # keep raw values
+  numboxes <- dim(temperature)[2] # number of boxes
+  
+  t          <- ncvar_get(nc.temperature.out, "t", collapse_degen = FALSE)
+  t <- t / (60*60*24) # convert seconds to days
+  numlayers <- dim(temperature)[1] # number of depth layers 
+  numtimes <- dim(temperature)[3] # number of time points
   
   nc_close(nc.temperature.out)
   
-  return(temperature)
+  return(list(t = t, 
+              numlayers  = numlayers,
+              numboxes   = numboxes,
+              numtimes   = numtimes,
+              temperature = temperature))
 }  
 
 # +==========================================================================+
