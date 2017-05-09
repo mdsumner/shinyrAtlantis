@@ -101,8 +101,7 @@ sh.forcings <- function(input.object){
   txt.depths <- paste(txt.depths, "</p>", sep = "")
 
   # create useful global arrays
-  exchange.links <- array(0, dim = c(numboxes, numlayers, 
-    numboxes, numlayers))
+#  exchange.links <- array(0, dim = c(numboxes, numlayers, numboxes, numlayers))
   # exchange.value: [i1,j1,i2,j2] = net flow from (i1,j1) to (i2,j2)
   exchange.value <- array(NA, dim = c(numboxes, numlayers, numboxes, numlayers))
   exchange.TS <- array(NA, dim = c(numtimes, numboxes, numlayers))
@@ -604,36 +603,8 @@ sh.forcings <- function(input.object){
         # calculate the time index of the data matrices
         t <- round((input$NI.Connections - input.object$t[1]) / dt, digits = 0) + 1
  
-        exchange.links[ , , , ] <- 0
-   # print(numboxes)
-   # print(numlayers)
-   # print(numdests)
-   # print(dim(input.object$exchange))
-   # print(dim(input.object$dest.box))
-   # print(dim(input.object$dest.layer))
-         for (i in 1:numboxes) {
-          for (j in 1:numlayers) {
-            for (k in 1:numdests) {
-              if (!is.na(input.object$exchange[k,j,i,t])) {
-                dest.i <- input.object$dest.box[k,j,i,t] + 1
-                dest.j <- input.object$dest.layer[k,j,i,t] + 1
-                if (!is.na(dest.i) & !is.na(dest.j)) {
-                  if (!((i == dest.i) & (j == dest.j))) { # only consider adjacent boxes
-                    exchange.links[i,j,dest.i,dest.j] <- exchange.links[i,j,dest.i,dest.j] + 1
-                    exchange.links[dest.i,dest.j,i,j] <- exchange.links[dest.i,dest.j,i,j] + 1
-                  }  
-                }
-              }
-            }
-          }
-        }
-        
-        total.links <- array(0, dim = c(numboxes, numlayers))
-        for (i in 1:numboxes) {
-          for (j in 1:numlayers) { # surface to bottom
-            total.links[i,j] <- sum(exchange.links[i,j, , ], na.rm = TRUE)
-          }
-        }
+        exchange.links <- exchange_links(input.object, t)
+        total.links <- total_links(exchange.links, numboxes, numlayers)
         
         df <- data.frame(boxid = 0:(numboxes-1), numlayers = box.data$numlayers, 
           total.links)
@@ -642,7 +613,9 @@ sh.forcings <- function(input.object){
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
         
-        names(df)[3:(numlayers+2)] <- layer.names
+        
+        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+2
         df <- tidyr::gather(df, layer, links, 3:tmp)
         df$layer <- sort(rep(0:(numlayers-1), numboxes))
@@ -654,7 +627,7 @@ sh.forcings <- function(input.object){
         
         df.plot <- dplyr::left_join(input.object$map.vertices, df, by = "boxid")
         df.unconnected <- df.plot %>% filter(links == 0)
-    
+
         gg <- ggplot(data = df.plot, 
           aes(x = x, y = y, group = boxid, fill = links)) +
           geom_polygon(colour = "grey25", size = 0.25, na.rm = TRUE) + 
@@ -677,31 +650,9 @@ sh.forcings <- function(input.object){
         # calculate the time index of the data matrices
         t <- round((input$NI.Connections - input.object$t[1]) / dt, digits = 0) + 1
         
-        exchange.links[ , , , ] <- 0
+        exchange.links <- exchange_links(input.object, t)
+        total.links <- total_links(exchange.links, numboxes, numlayers)
         
-        for (i in 1:numboxes) {
-          for (j in 1:numlayers) {
-            for (k in 1:numdests) {
-              if (!is.na(input.object$exchange[k,j,i,t])) {
-                dest.i <- input.object$dest.box[k,j,i,t] + 1
-                dest.j <- input.object$dest.layer[k,j,i,t] + 1
-                if (!is.na(dest.i) & !is.na(dest.j)) {
-                  if (!((i == dest.i) & (j == dest.j))) { # only consider adjacent boxes
-                    exchange.links[i,j,dest.i,dest.j] <- exchange.links[i,j,dest.i,dest.j] + 1
-                    exchange.links[dest.i,dest.j,i,j] <- exchange.links[dest.i,dest.j,i,j] + 1
-                  }  
-                }
-              }
-            }
-          }
-        }
-        
-        total.links <- array(0, dim = c(numboxes, numlayers))
-        for (i in 1:numboxes) {
-          for (j in 1:numlayers) { # surface to bottom
-            total.links[i,j] <- sum(exchange.links[i,j, , ], na.rm = TRUE)
-          }
-        }
         
         df <- data.frame(boxid = 0:(numboxes-1), numlayers = box.data$numlayers, 
           total.links)
@@ -710,7 +661,9 @@ sh.forcings <- function(input.object){
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
         
-        names(df)[3:(numlayers+2)] <- layer.names
+        
+        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+2
         
         df <- tidyr::gather(df, layer, links, 3:tmp)
@@ -1217,7 +1170,9 @@ sh.forcings <- function(input.object){
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
         
-        names(df)[4:(numlayers+3)] <- layer.names
+        
+        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, vert, 4:tmp)
         df$layer <- sort(rep(0:(numlayers-1), numboxes))
@@ -1295,7 +1250,9 @@ sh.forcings <- function(input.object){
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
         
-        names(df)[4:(numlayers+3)] <- layer.names
+        
+        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, vert, 4:tmp)
         df$layer <- sort(rep(0:(numlayers-1), numboxes))
@@ -1325,7 +1282,8 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
 
-          names(df)[3:(numlayers+3)] <- layer.names
+          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          names(df)[name_idx_0] <- layer.names
           tmp <- numlayers+3
           df <- tidyr::gather(df, layer, temperature, 3:tmp)
           df$layer <- sort(rep(0:numlayers, numboxes))
@@ -1379,7 +1337,8 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
         
-          names(df)[3:(numlayers+3)] <- layer.names
+          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          names(df)[name_idx_0] <- layer.names
           tmp <- numlayers+3
           df <- tidyr::gather(df, layer, temperature, 3:tmp)
           df$layer <- sort(rep(0:numlayers, numboxes))
@@ -1411,7 +1370,8 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
         
-          names(df)[2:(numlayers+2)] <- layer.names
+          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, temperature, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
           
@@ -1457,7 +1417,8 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
           
-          names(df)[2:(numlayers+2)] <- layer.names
+          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, temperature, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
           
@@ -1488,8 +1449,9 @@ sh.forcings <- function(input.object){
         for (i in 1:(numlayers+1)) {
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
-        browser()
-        names(df)[3:(numlayers+3)] <- layer.names
+    
+        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, salinity, 3:tmp)
         df$layer <- sort(rep(0:numlayers, numboxes))
@@ -1531,7 +1493,9 @@ sh.forcings <- function(input.object){
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
      
-        names(df)[3:(numlayers+3)] <- layer.names
+        
+        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, salinity, 3:tmp)
         df$layer <- sort(rep(0:numlayers, numboxes))
@@ -1562,7 +1526,9 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
       
-          names(df)[2:(numlayers+2)] <- layer.names
+          
+          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, salinity, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
           
@@ -1608,7 +1574,9 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
           
-          names(df)[2:(numlayers+2)] <- layer.names
+          
+          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, salinity, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
           
