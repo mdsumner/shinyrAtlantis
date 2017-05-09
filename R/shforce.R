@@ -175,7 +175,7 @@ sh.forcings <- function(input.object){
               selectInput(inputId = "SI.Box", label = "Focal box", 
                 choices = 0:(numboxes-1)),
               selectInput(inputId = "SI.Level", label = "Plotted layer\n(surface = layer 1)", 
-                choices = 1:box.data$numlayers[1]), 
+                choices = seq_len(box.data$numlayers[1])), 
               numericInput(inputId = "NI.Time", label = "Time (days)", 
                 min = min(input.object$t), max = max(input.object$t),
                 value = input.object$t[1], step = dt),
@@ -605,8 +605,13 @@ sh.forcings <- function(input.object){
         t <- round((input$NI.Connections - input.object$t[1]) / dt, digits = 0) + 1
  
         exchange.links[ , , , ] <- 0
-        
-        for (i in 1:numboxes) {
+   # print(numboxes)
+   # print(numlayers)
+   # print(numdests)
+   # print(dim(input.object$exchange))
+   # print(dim(input.object$dest.box))
+   # print(dim(input.object$dest.layer))
+         for (i in 1:numboxes) {
           for (j in 1:numlayers) {
             for (k in 1:numdests) {
               if (!is.na(input.object$exchange[k,j,i,t])) {
@@ -1483,7 +1488,7 @@ sh.forcings <- function(input.object){
         for (i in 1:(numlayers+1)) {
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
-        
+        browser()
         names(df)[3:(numlayers+3)] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, salinity, 3:tmp)
@@ -1525,7 +1530,7 @@ sh.forcings <- function(input.object){
         for (i in 1:(numlayers+1)) {
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
-        
+     
         names(df)[3:(numlayers+3)] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, salinity, 3:tmp)
@@ -1556,7 +1561,7 @@ sh.forcings <- function(input.object){
           for (i in 1:(numlayers+1)) {
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
-          
+      
           names(df)[2:(numlayers+2)] <- layer.names
           df <- tidyr::gather(df, layer, salinity, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
@@ -1772,7 +1777,7 @@ make.salinity.object.frc <- function(salinity.file) {
               numlayers  = numlayers,
               numboxes   = numboxes,
               numtimes   = numtimes,
-              temperature = salinity))
+              salinity = salinity))
 }  
 
 # +======================================================================+
@@ -1842,10 +1847,18 @@ make.sh.forcings.object <- function(bgm.file, exchange.file, cum.depth,
   
   cat("-- Extracting data (this may take a while)\n")
   flux.object <- make.exchanges.object.frc(exchange.file)   
+  nl_cases <- flux.object$numlayers
+  nb_cases <- flux.object$numboxes
+  nt_cases <- flux.object$numtimes
+  times <- list(flux.object$t)
   
   if (!is.null(temperature.file)) {
     cat("-- Extracting temperature data\n")
     temperature <- make.temperature.object.frc(temperature.file)
+    nl_cases <- c(nl_cases, temperature$numlayers)
+    nb_cases <- c(nb_cases, temperature$numboxes)
+    nt_cases <- c(nt_cases, temperature$numtimes)
+    times <- c(times, list(temperature$t))
   } else {
     cat("-- No temperature file provided\n")
     temperature <- NULL
@@ -1854,25 +1867,38 @@ make.sh.forcings.object <- function(bgm.file, exchange.file, cum.depth,
   if (!is.null(salinity.file)) {
     cat("-- Extracting salinity data\n")
     salinity <- make.salinity.object.frc(salinity.file)
+    nl_cases <- c(nl_cases, salinity$numlayers)
+    nb_cases <- c(nb_cases, salinity$numboxes)
+    nt_cases <- c(nt_cases, salinity$numtimes)
+    times <- c(times, list(salinity$t))
   } else {
     cat("-- No salinity file provided\n")
     salinity <- NULL
   }
+
+  numboxes <- max(nb_cases)
+  numlayers <- max(nl_cases)
+  numtimes <- max(nt_cases)
+  times <- times[[which.max(lengths(times))]]
+  if (length(unique(nb_cases)) > 1) warning(sprintf("forcings report differing numbers of boxes %s", paste(nb_cases, collapse = ", ")))
+  if (length(unique(nl_cases)) > 1) warning(sprintf("forcings report differing numbers of layers %s", paste(nl_cases, collapse = ", ")))
+  if (length(unique(nt_cases)) > 1) warning(sprintf("forcings report differing numbers of time steps %s", paste(nt_cases, collapse = ", ")))
+  
   
   return(list(
     cum.depth    = cum.depth,
     map.vertices = map.object$map.vertices, 
     box.data     = map.object$box.data,
-    numboxes     = flux.object$numboxes,
-    numlayers    = flux.object$numlayers,
+    numboxes     = numboxes,
+    numlayers    = numlayers,
     numdests     = flux.object$numdests,
-    numtimes     = flux.object$numtimes,
-    t            = flux.object$t,
+    numtimes     = numtimes,
+    t            = times,
     exchange     = flux.object$exchange,
     dest.layer   = flux.object$dest.layer,
     dest.box     = flux.object$dest.box,
-    temperature  = temperature,
-    salinity     = salinity
+    temperature  = temperature$temperature,
+    salinity     = salinity$salinity
   ))    
 }
 
