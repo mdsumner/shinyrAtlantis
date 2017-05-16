@@ -1,0 +1,22 @@
+## hacky way to declare these to avoid check complaining
+globalVariables(c("cover.check", "depth", "dest.plot.layer", "distribution", 
+"facet_grid", "fluidPage", "fluidRow", "fraction", "gather", 
+"h3", "h4", "h5", "hr", "htmlOutput", "input.object", "insideX", 
+"insideY", "isVertebrate", "layers.total", "layers.water", "len", 
+"links", "lvl", "mainPanel", "mass", "mum", "navbarMenu", "navbarPage", 
+"nc_create", "ncatt_put", "ncvar_def", "ncvar_put", "number", 
+"numericInput", "numlayers", "observe", "observeEvent", "p", 
+"period", "plotOutput", "present", "reactiveValues", "refuge_status", 
+"renderPlot", "renderText", "renderUI", "salinity", "selectInput", 
+"shinyApp", "sidebarLayout", "sidebarPanel", "stopApp", "str_sub<-", 
+"tabPanel", "temperature", "textInput", "textOutput", "total.depth", 
+"updateNumericInput", "updateSelectInput", "valid.z", "verbatimTextOutput", 
+"vert", "water.present", "wellPanel", "x", "x.in", "y", "y.in", 
+"z", ".bx0", "actionButton", "area", "Availability", "biomass", 
+"botz", "boxid", "brushOpts", "checkboxGroupInput", "checkboxInput", 
+"Clearance", "Code", "Cohort", "column", "Cover", "EDR", "ELive", 
+"Fraction", "GroupType", "Growth", "HTML", "Interaction", "IsCover", 
+"KWRR", "KWSR", "N.Type", "N.Value", "Name", "NType", "NumCohorts", 
+"Nums.Value", "Pred.Ad", "Predator", "Prey.Ad", "Rate", "Require", 
+"Reserve", "Rugosity", "Spawn", "Stage", "Type", "Weight"), package = "shinyrAtlantis", add = TRUE)
+
