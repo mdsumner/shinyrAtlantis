@@ -8,11 +8,11 @@
 #' @export
 #'
 #' @examples
-#' shinyrAtlantis::SpatialDistributionsExample()
+#' #shinyrAtlantis::SpatialDistributionsExample()
 #' 
-# shinyrAtlantis::DisplayParametersExample() # removed as it does not work
+# #shinyrAtlantis::DisplayParametersExample() # removed as it does not work
 #  
-#' shinyrAtlantis::DisplayInitializationExample()
+#' #shinyrAtlantis::DisplayInitializationExample()
 SpatialDistributionsExample <- function() {
 # ====================================================================
   # code to choose the spatial data file (.bgm)

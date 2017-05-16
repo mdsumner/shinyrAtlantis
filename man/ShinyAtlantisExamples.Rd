@@ -20,7 +20,7 @@ Some examples of the shiny applications based on an incomplete
 Atlantis model for Antarctica.
 }
 \examples{
-shinyrAtlantis::SpatialDistributionsExample()
+#shinyrAtlantis::SpatialDistributionsExample()
 
-shinyrAtlantis::DisplayInitializationExample()
+#shinyrAtlantis::DisplayInitializationExample()
 }

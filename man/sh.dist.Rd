@@ -7,7 +7,7 @@
 sh.dist(map.object)
 }
 \arguments{
-\item{map.obj}{R list object generated from \code{\link[shinyrAtlantis]{make.sh.dist.object}}.}
+\item{map.object}{BGM vertices and box data}
 }
 \value{
 Object of class 'shiny.appobj' see \code{\link[shiny]{shinyApp}}.
@@ -21,6 +21,8 @@ The application allows users to create probability distributions that
 describe how a species is distributed across boxes assuming that the distribution
 is uniform within the spatial range defined by the user. The output produced within the shiny output can then 
 be cut-and-pasted into an Atlantis .prm file.
+
+See \code{\link{make.map.object}} for the \code{map.object} input argument
 }
 \examples{
 \dontrun{
