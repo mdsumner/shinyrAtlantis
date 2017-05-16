@@ -1815,7 +1815,7 @@ make.sh.forcings.object <- function(bgm.file, exchange.file, cum.depth,
   
   cat("-- Extracting data (this may take a while)\n")
   flux.object <- make.exchanges.object.frc(exchange.file)   
-  nl_cases <- flux.object$numlayers
+ nl_cases <- flux.object$numlayers
   nb_cases <- flux.object$numboxes
   nt_cases <- flux.object$numtimes
   times <- list(flux.object$t)
@@ -1844,9 +1844,11 @@ make.sh.forcings.object <- function(bgm.file, exchange.file, cum.depth,
     salinity <- NULL
   }
 
-  numboxes <- max(nb_cases)
-  numlayers <- max(nl_cases)
-  numtimes <- max(nt_cases)
+  numboxes <- nb_cases[1]
+  ## no, no, no - numlayers is exchange MDS 2017-05-16
+  ##numlayers <- max(nl_cases)
+  numlayers <- nl_cases[1]
+  numtimes <- nt_cases[1]
   times <- times[[which.max(lengths(times))]]
   if (length(unique(nb_cases)) > 1) warning(sprintf("forcings report differing numbers of boxes %s", paste(nb_cases, collapse = ", ")))
   if (length(unique(nl_cases)) > 1) warning(sprintf("forcings report differing numbers of layers %s", paste(nl_cases, collapse = ", ")))
