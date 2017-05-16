@@ -6,3 +6,4 @@ inst/extdata/test.nc
 ^README-.*\.png$
 ^appveyor\.yml$
 ^egfiles$
+^codecov\.yml$

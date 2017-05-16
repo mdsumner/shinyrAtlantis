@@ -1,7 +1,6 @@
 
-[![Travis-CI Build Status](https://travis-ci.org/mdsumner/shinyrAtlantis.svg?branch=master)](https://travis-ci.org/mdsumner/shinyrAtlantis) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mdsumner/shinyrAtlantis?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/shinyrAtlantis)
+[![Travis-CI Build Status](https://travis-ci.org/mdsumner/shinyrAtlantis.svg?branch=master)](https://travis-ci.org/mdsumner/shinyrAtlantis) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mdsumner/shinyrAtlantis?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/shinyrAtlantis) [![Coverage Status](https://img.shields.io/codecov/c/github/shinyrAtlantis/master.svg)](https://codecov.io/github/shinyrAtlantis?branch=master) <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 shinyrAtlantis
 --------------
 
