@@ -5,3 +5,4 @@ inst/extdata/test.nc
 ^README\.Rmd$
 ^README-.*\.png$
 ^appveyor\.yml$
+^egfiles$
