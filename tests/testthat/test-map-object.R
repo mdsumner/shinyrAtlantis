@@ -9,15 +9,8 @@ test_that("rbgm read is the same", {
   cum.depth <- c(0,5,10,20,50,100,200,3000)  # cumulative water layer depths
   
   bgm <- make.map.object.frc(bgm.file, cum.depth)
-  bgm_new <- rbgm::bgmfile(bgm.file)
-  box.data <- bgm_new$boxes %>% 
-    transmute(boxid = factor(.bx0), z = botz, is.island = z >= 0, area, 
-              volume = abs(area * botz), x.in = insideX, y.in = insideY, 
-              numlayers = unlist(lapply(z, function(x) sum(pmin(pmax(0, -x), max(cum.depth)) > cum.depth))))
-  map.vertices <- bgm_new$boxes %>% select(.bx0) %>% inner_join(bgm_new$boxesXverts) %>% inner_join(bgm_new$vertices) %>% 
-    transmute(boxid = .bx0, x, y)
-  
-  expect_true(identical(bgm$map.vertices, as.data.frame(map.vertices)))
-  expect_true(all.equal(bgm$box.data, as.data.frame(box.data)))
+  bgm_new <- bgm_map_object(bgm.file, cum.depth)
+  expect_true(identical(bgm$map.vertices, as.data.frame(bgm_new$map.vertices)))
+  expect_true(all.equal(bgm$box.data, as.data.frame(bgm_new$box.data)))
   
 })
