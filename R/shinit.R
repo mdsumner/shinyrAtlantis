@@ -977,7 +977,7 @@ make.init.data <- function(nc.file, numboxes, numlevels) {
     for (i in 1:length(odd.species)) {
       odd.name <- c(odd.name, odd.species[[i]][1])
     }
-    odd.species <- unique(na.omit(odd.name))
+    odd.species <- unique(stats::na.omit(odd.name))
     species.names <- c(species.names, odd.species) # add odd species to species list
   } 
   

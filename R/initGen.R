@@ -89,7 +89,7 @@ make.map.data.init <- function(bgm.file, cum.depths){
 # ==============================================================================
 generate.vars.init <- function(grp.file, cum.depths, df.atts) {
   # read in group data from group csv file
-  df.grp <- read.csv(file = grp.file, header = TRUE, stringsAsFactors = FALSE)
+  df.grp <- utils::read.csv(file = grp.file, header = TRUE, stringsAsFactors = FALSE)
   # make sure GroupType column title exists
   col.titles <- names(df.grp)
   col.InvertType <- which(col.titles == "InvertType")
@@ -257,7 +257,7 @@ generate.vars.init <- function(grp.file, cum.depths, df.atts) {
 #' @importFrom ncdf4 ncdim_def
 make.init.csv <- function(grp.file, bgm.file, cum.depths, csv.name) {
   def.att.file <- system.file("extdata", "AttributeTemplate.csv", package = "shinyrAtlantis")
-  df.atts <- read.csv(file = def.att.file, header = TRUE, stringsAsFactors = FALSE)
+  df.atts <- utils::read.csv(file = def.att.file, header = TRUE, stringsAsFactors = FALSE)
 
   numlayers <- length(cum.depths) - 1 # number of water layers
   # calculate the depths of each water layer
@@ -288,7 +288,7 @@ make.init.csv <- function(grp.file, bgm.file, cum.depths, csv.name) {
     df.return$long_name[num.vars] <- grp.data$long_name[i]
   }
 
-  write.csv(df.return, file = paste(csv.name, "_init.csv", sep = ""),
+  utils::write.csv(df.return, file = paste(csv.name, "_init.csv", sep = ""),
     row.names = FALSE)
 
   # create a template for custom horizontal distributions
@@ -299,7 +299,7 @@ make.init.csv <- function(grp.file, bgm.file, cum.depths, csv.name) {
   names(df.custom) <- c("Variable",
     paste("box", as.character(0:(numboxes-1)), sep = ""))
 
-  write.csv(df.custom, file = paste(csv.name, "_horiz.csv", sep = ""),
+  utils::write.csv(df.custom, file = paste(csv.name, "_horiz.csv", sep = ""),
     row.names = FALSE)
 
   return (NULL)
@@ -349,9 +349,9 @@ make.init.csv <- function(grp.file, bgm.file, cum.depths, csv.name) {
 #' @export
 make.init.nc <- function(bgm.file, cum.depths, init.file, horiz.file, nc.file) {
   # nc file is created using the data stored in the following two csv files
-  df.init <- df.grp <- read.csv(file = init.file, header = TRUE,
+  df.init <- df.grp <- utils::read.csv(file = init.file, header = TRUE,
     stringsAsFactors = FALSE)
-  df.horiz <- df.grp <- read.csv(file = horiz.file, header = TRUE,
+  df.horiz <- df.grp <- utils::read.csv(file = horiz.file, header = TRUE,
     stringsAsFactors = FALSE)
     ## Transfor in double 0. for the ncfile
     df.init$b_dens <- as.double(df.init$b_dens)
@@ -629,7 +629,7 @@ get.init.nc <- function(nc.file, output.file) {
   df.out <- data.frame(Variable = var.names.all, m.data) # make a data frame
   names(df.out) <- c("Variable",
     paste("box", as.character(0:(numboxes-1)), sep = "")) # name the columns
-  write.csv(df.out, output.file) # write all the data to a csv file
+  utils::write.csv(df.out, output.file) # write all the data to a csv file
 
   return(NULL)
 }

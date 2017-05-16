@@ -68,14 +68,14 @@ sh.prm <- function(obj){
   
   # checkbox labels for group templates
   def.grp.file <- system.file("extdata", "grpTemplates.csv", package = "shinyrAtlantis")
-  df.prms.all <- read.csv(file = def.grp.file, header = TRUE)
+  df.prms.all <- utils::read.csv(file = def.grp.file, header = TRUE)
   tmplts <- df.prms.all$Template
-  tmplts <- setNames(1:length(tmplts), tmplts)
+  tmplts <- stats::setNames(1:length(tmplts), tmplts)
   
   # select input names for horizontal
-  grp.codes <- setNames(1:length(obj$grp.def$Code), obj$grp.def$Code)
+  grp.codes <- stats::setNames(1:length(obj$grp.def$Code), obj$grp.def$Code)
   grp.codes.ord <- sort(obj$grp.def$Code)
-  grp.codes.ord <- setNames(1:length(grp.codes.ord), grp.codes.ord)
+  grp.codes.ord <- stats::setNames(1:length(grp.codes.ord), grp.codes.ord)
   
   # food availability groups
   prey.types <- c(as.character(obj$grp.def$Code), "DLsed", "DRsed", "DCsed")
@@ -1267,14 +1267,14 @@ sh.prm <- function(obj){
           names(df.res)[2:(1+max.cohorts)] <- 1:max.cohorts
           df.res <- tidyr::gather(data = df.res, key = "Cohort",
             value = "mass", 2:(1+max.cohorts))
-          df.res <- df.res[complete.cases(df.res),]
+          df.res <- df.res[stats::complete.cases(df.res),]
           
           df.str <- obj$grp.mig$mig.str
           max.cohorts <- dim(df.str)[2] - 1
           names(df.str)[2:(1+max.cohorts)] <- 1:max.cohorts
           df.str <- tidyr::gather(data = df.str, key = "Cohort",
             value = "mass", 2:(1+max.cohorts))
-          df.str <- df.str[complete.cases(df.str),]
+          df.str <- df.str[stats::complete.cases(df.str),]
           
           ggplot(data = df.res, aes(x = Cohort, y = mass, group = Code)) +
             geom_point() + geom_line() + 
@@ -1303,7 +1303,7 @@ sh.prm <- function(obj){
         )
         
         no.mass.data <- sum(df.recruit.mass$KWSR, na.rm = TRUE) == 0.0
-        df.recruit.mass <- df.recruit.mass[complete.cases(df.recruit.mass), ]
+        df.recruit.mass <- df.recruit.mass[stats::complete.cases(df.recruit.mass), ]
         
         if (no.mass.data) {
           df.blank <- data.frame(x = 1, y = 0)
@@ -1423,7 +1423,7 @@ make.prm.map <- function(bgm.file){
 # |  make.prm.groups : collect group data for displaying  |
 # +=======================================================+
 make.prm.groups <- function(grp.file){
-  df <- read.csv(grp.file)
+  df <- utils::read.csv(grp.file)
   
   # extract habitat types
   habitat.types <- c(as.character(df$Code[df$IsCover == 1]), "reef", "flat", "soft", "canyon")
@@ -1451,7 +1451,7 @@ make.prm.attributes <- function(prm.file, grp.vals){
   grp.att <- grp.vals[c("Code", "Name", "GroupType")] # develop this data frame
   
   def.grp.file <- system.file("extdata", "grpTemplates.csv", package = "shinyrAtlantis")
-  df.prms.all <- read.csv(file = def.grp.file, header = TRUE)
+  df.prms.all <- utils::read.csv(file = def.grp.file, header = TRUE)
   tmplts <- df.prms.all$Template # group templates to search for
   Codes <- grp.att$Code # groups to search for
 
@@ -1496,7 +1496,7 @@ make.prm.general <- function(prm.file){
   prm <- readLines(prm.file) # read in the biological parameter file
   # read in the parameter definition file
   def.all.file <- system.file("extdata", "paramdefns.csv", package = "shinyrAtlantis")
-  df.prm.defns <- read.csv(def.all.file, header = TRUE)
+  df.prm.defns <- utils::read.csv(def.all.file, header = TRUE)
   df.prms <- df.prm.defns # data frame to return
   df.prms$Value <- NA # set initial values
   df.prms <- df.prms[c("Parameter","Units", "Value", "Suggested", "Definition")] # name df columns
@@ -1541,7 +1541,7 @@ GetHabitats <- function(grp.att, tmplt, prm, habitat.types) {
     txt.find <- gsub(pattern = "XXX", replacement = xxx, x = tmplt)
     j <- grep(pattern = txt.find, x = prm, value = FALSE) # file row(s)
     if (length(j) == 1) { # a single row is found. Data is on next row
-      hab.vals <- na.omit(as.numeric(unlist(
+      hab.vals <- stats::na.omit(as.numeric(unlist(
         strsplit(prm[j+1], "[^0-9.]+"))))
       k <- which(txt.rows$Code == xxx)
       txt.rows[k,] <- c(xxx, hab.vals)
@@ -1867,7 +1867,7 @@ make.prm.prey <- function(prm.file, Code) {
       j <- grep(pattern = txt.find, x = prm, value = FALSE) # file row(s)
       if (length(j) == 1) {
         vals <- as.numeric(unlist(str_split(string = prm[j[1]+1], pattern = "[\t\n ]+")))
-        age.data[xxx, yyy, ] <- na.omit(vals)
+        age.data[xxx, yyy, ] <- stats::na.omit(vals)
       }
     } 
   }

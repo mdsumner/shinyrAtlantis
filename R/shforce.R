@@ -614,7 +614,7 @@ sh.forcings <- function(input.object){
         }
         
         
-        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
         names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+2
         df <- tidyr::gather(df, layer, links, 3:tmp)
@@ -662,7 +662,7 @@ sh.forcings <- function(input.object){
         }
         
         
-        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
         names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+2
         
@@ -968,7 +968,7 @@ sh.forcings <- function(input.object){
             }
           }  
           df.plot <- data.frame(ts, box.layer, exch)
-          df.plot <- df.plot[complete.cases(df.plot),]
+          df.plot <- df.plot[stats::complete.cases(df.plot),]
         
           ggplot(data = df.plot, aes(x = ts, y = exch, color = box.layer)) + 
             geom_point(size = 0.35) + geom_line() +
@@ -1171,7 +1171,7 @@ sh.forcings <- function(input.object){
         }
         
         
-        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
         names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, vert, 4:tmp)
@@ -1251,7 +1251,7 @@ sh.forcings <- function(input.object){
         }
         
         
-        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
         names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, vert, 4:tmp)
@@ -1282,7 +1282,7 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
 
-          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
           names(df)[name_idx_0] <- layer.names
           tmp <- numlayers+3
           df <- tidyr::gather(df, layer, temperature, 3:tmp)
@@ -1337,7 +1337,7 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
         
-          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
           names(df)[name_idx_0] <- layer.names
           tmp <- numlayers+3
           df <- tidyr::gather(df, layer, temperature, 3:tmp)
@@ -1370,7 +1370,7 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
         
-          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
           names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, temperature, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
@@ -1417,7 +1417,7 @@ sh.forcings <- function(input.object){
             layer.names[i] <- paste("l", as.character(i-1), sep = "")
           }
           
-          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
           names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, temperature, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
@@ -1450,7 +1450,7 @@ sh.forcings <- function(input.object){
           layer.names[i] <- paste("l", as.character(i-1), sep = "")
         }
     
-        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
         names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, salinity, 3:tmp)
@@ -1494,7 +1494,7 @@ sh.forcings <- function(input.object){
         }
      
         
-        name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+        name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
         names(df)[name_idx_0] <- layer.names
         tmp <- numlayers+3
         df <- tidyr::gather(df, layer, salinity, 3:tmp)
@@ -1527,7 +1527,7 @@ sh.forcings <- function(input.object){
           }
       
           
-          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
           names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, salinity, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))
@@ -1575,7 +1575,7 @@ sh.forcings <- function(input.object){
           }
           
           
-          name_idx_0 <- tail(seq_len(ncol(df)), length(layer.names))
+          name_idx_0 <- utils::tail(seq_len(ncol(df)), length(layer.names))
           names(df)[name_idx_0] <- layer.names
           df <- tidyr::gather(df, layer, salinity, 2:(numlayers+2))
           df$layer <- sort(rep(0:numlayers, numtimes))

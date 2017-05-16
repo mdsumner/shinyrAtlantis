@@ -158,7 +158,7 @@ GenerateFeedingData <- function(grp.file, prm.file, nc.file) {
   # == Group .csv file
   
   # read in group data from group .csv file
-  df.grp <- read.csv(file = grp.file, header = TRUE, 
+  df.grp <- utils::read.csv(file = grp.file, header = TRUE, 
     stringsAsFactors = FALSE)
   # make sure GroupType column title exists
   col.titles <- names(df.grp)
@@ -308,7 +308,7 @@ GenerateFeedingData <- function(grp.file, prm.file, nc.file) {
       j <- jnew # use this list of rows as they are valid
       if (length(j) == 1) { # a single row is found so valid
         # Clearance data is on the next row
-        FSPB.vals <- na.omit(as.numeric(unlist(strsplit(prm[j+1],
+        FSPB.vals <- stats::na.omit(as.numeric(unlist(strsplit(prm[j+1],
           "[^0-9.]+"))))
         Pr.FSPB[i, 1:length(FSPB.vals)] <- FSPB.vals
       } 
@@ -333,7 +333,7 @@ GenerateFeedingData <- function(grp.file, prm.file, nc.file) {
         p.val <- as.numeric(unlist(str_split(prm[j],"[\t ]+"))[2])
         df.grp$NumCohortsPrm[i] <- p.val
         # Clearance data is on the next row
-        C.vals <- na.omit(as.numeric(unlist(strsplit(prm[j+1], "[^0-9.]+"))))
+        C.vals <- stats::na.omit(as.numeric(unlist(strsplit(prm[j+1], "[^0-9.]+"))))
         Rate.C[i, 1:length(C.vals)] <- C.vals
       } 
     }
@@ -396,7 +396,7 @@ GenerateFeedingData <- function(grp.file, prm.file, nc.file) {
       j <- jnew # use this list of rows as they are valid
       if (length(j) == 1) { # a single row is found so valid
         # Clearance data is on the next row
-        mum.vals <- na.omit(as.numeric(unlist(strsplit(prm[j+1],
+        mum.vals <- stats::na.omit(as.numeric(unlist(strsplit(prm[j+1],
           "[^0-9.]+"))))
         Rate.mum[i, 1:length(mum.vals)] <- mum.vals
       } 
