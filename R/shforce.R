@@ -1382,7 +1382,7 @@ sh.forcings <- function(input.object){
           df$dest.plot.layer[df$dest.plot.layer < 1] <- numlayers + 
             as.integer(df$dest.plot.layer[df$dest.plot.layer < 1])
         
-          plot.cols <- c(colorRampPalette(c("#fcbba1", "#99000d"))( numlayers ),"black")
+          plot.cols <- shra_colours()
 
           ggplot(data = df, 
             aes(x = time, y = temperature, color = dest.plot.layer)) +
@@ -1539,7 +1539,7 @@ sh.forcings <- function(input.object){
           df$dest.plot.layer[df$dest.plot.layer < 1] <- numlayers + 
             as.integer(df$dest.plot.layer[df$dest.plot.layer < 1])
           
-          plot.cols <- c(colorRampPalette(c("#fcbba1", "#99000d"))( numlayers ),"black")
+          plot.cols <- shra_colours()
           
           ggplot(data = df, 
             aes(x = time, y = salinity, color = dest.plot.layer)) +
