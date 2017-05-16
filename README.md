@@ -1,5 +1,5 @@
 
-[![Travis-CI Build Status](https://travis-ci.org/mdsumner/shinyrAtlantis.svg?branch=master)](https://travis-ci.org/mdsumner/shinyrAtlantis)
+[![Travis-CI Build Status](https://travis-ci.org/mdsumner/shinyrAtlantis.svg?branch=master)](https://travis-ci.org/mdsumner/shinyrAtlantis) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mdsumner/shinyrAtlantis?branch=master&svg=true)](https://ci.appveyor.com/project/mdsumner/shinyrAtlantis)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 shinyrAtlantis
