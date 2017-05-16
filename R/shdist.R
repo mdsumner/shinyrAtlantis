@@ -11,7 +11,8 @@
 #' is uniform within the spatial range defined by the user. The output produced within the shiny output can then 
 #' be cut-and-pasted into an Atlantis .prm file.
 #' 
-#' @param map.obj R list object generated from \code{\link[shinyrAtlantis]{make.sh.dist.object}}.
+#' See \code{\link{make.map.object}} for the \code{map.object} input argument
+#' @param map.object BGM vertices and box data
 #'
 #' @return Object of class 'shiny.appobj' see \code{\link[shiny]{shinyApp}}.
 #' @importFrom dplyr mutate

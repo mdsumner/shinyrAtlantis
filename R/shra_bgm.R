@@ -1,11 +1,20 @@
+#' Read BGM with rbgm
+#'
+#' @param bgm_file path to BGM file
+#' @param cum_depth vector of cumulative depths
+#' @keywords internal
+#' @return list of map.vertices and box.data 
+#' @importFrom rbgm bgmfile
+#' @importFrom dplyr %>% inner_join select transmute
 bgm_map_object <- function(bgm_file, cum_depth) {
-  rbgm::bgmfile(bgm_file)
-  list(box.data = bgm_new$boxes %>% 
-    transmute(boxid = factor(.bx0), z = botz, is.island = z >= 0, area, 
+  bgm_mesh <- rbgm::bgmfile(bgm_file)
+  list(box.data = bgm_mesh$boxes %>% 
+    dplyr::transmute(boxid = factor(.bx0), z = botz, is.island = z >= 0, area, 
               volume = abs(area * botz), x.in = insideX, y.in = insideY, 
               numlayers = unlist(lapply(z, function(x) sum(pmin(pmax(0, -x), max(cum_depth)) > cum_depth)))), 
-  map.vertices = bgm_new$boxes %>% select(.bx0) %>% inner_join(bgm_new$boxesXverts) %>% inner_join(bgm_new$vertices) %>% 
-    transmute(boxid = .bx0, x, y))
+  map.vertices = bgm_mesh$boxes %>% dplyr::select(.bx0) %>% 
+    dplyr::inner_join(bgm_mesh$boxesXverts) %>% dplyr::inner_join(bgm_mesh$vertices) %>% 
+    dplyr::transmute(boxid = .bx0, x, y))
   
 }
 
